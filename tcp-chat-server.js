@@ -6,10 +6,11 @@ var net = require('net');
 var sockets = [];
 
 var s = net.Server(function (socket) {
-    socket.nickname = socket.remoteAddress;
-    sockets.push(socket);
-    socket.write('Epic Chat Server\n\rFor help type \\help\n\rJust type to chat!\n\r'); 
     var addr = socket.remoteAddress;
+    socket.nickname = addr;
+    sockets.push(socket);
+
+    socket.write('Epic Chat Server\n\rFor help type \\help\n\rJust type to chat!\n\r'); 
     console.log('new connection from: ' + addr);
     writeToAll(addr + ' connected!\n\r');
 
@@ -25,7 +26,7 @@ var s = net.Server(function (socket) {
         //append newline if missing
         d = (/\n.?$/.test(d)) ? d : d + '\n';
         var consoleStr = d;
-        console.log('received message from ' + socket.remoteAddress + ': '
+        console.log('received message from ' + addr + ': '
             + new String(d).replace(/\n$/, ''));
 
         // parse input for valid commands
