@@ -37,7 +37,7 @@ var s = net.Server(function (socket) {
 
     function parseForCommands(msg) {
         // \help command to show help
-        if (/\help/.test(msg)) {
+        if (/\\help/.test(msg)) {
             socket.write(
                 '\\nick\t\tshows your nickname\n\r' +
                 '\\nick name\tchanges your nickname to name\n\r' +
