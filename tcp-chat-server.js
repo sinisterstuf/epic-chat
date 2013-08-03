@@ -6,7 +6,8 @@ var net = require('net');
 var sockets = [];
 
 var s = net.Server(function (socket) {
-    sockets.push({socket:socket, name:socket.remoteAddress});
+    socket.nickname = socket.remoteAddress;
+    sockets.push(socket);
     socket.write('Epic Chat Server\n\rFor help type \\help\n\rJust type to chat!\n\r'); 
     var addr = socket.remoteAddress;
     console.log('new connection from: ' + addr);
@@ -15,21 +16,9 @@ var s = net.Server(function (socket) {
     // sends a message to all sockets except the current socket
     function writeToAll(msg) {
         for (var i = 0; i < sockets.length; i++) {
-            if (sockets[i].socket == socket) continue; // skip myself
-            sockets[i].socket.write(msg);
+            if (sockets[i] == socket) continue; // skip myself
+            sockets[i].write(msg);
         }
-    }
-
-    // looks for an existing named socket in sockets[]
-    // returns the index in sockets[] or -1 if not found
-    // TODO: update this to return a name instead of an index (there are no possible cases when a name cannot be in the list)
-    function findExistingName(socket) {
-        for (var i = 0; i < sockets.length; i++) {
-            if (sockets[i].socket == socket) {
-                return i;
-            }
-        };
-        return -1;
     }
 
     socket.on('data', function(d) {
@@ -42,7 +31,7 @@ var s = net.Server(function (socket) {
         // parse input for valid commands
         if (!parseForCommands(d)) {
             // if it wasn't a command then write it to everybody
-            writeToAll(sockets[findExistingName(socket)].name + ': ' + d);
+            writeToAll(socket.nickname + ': ' + d);
         }
     });
 
@@ -71,17 +60,12 @@ var s = net.Server(function (socket) {
                 name = /^[a-zA-Z0-9]*/.exec(name);
                 console.log('setting \'' + name + '\' as name for ' + addr);
 
-                writeToAll(sockets[findExistingName(socket)].name + ' changed name to ' + name + '\n\r');
-                sockets[findExistingName(socket)].name = name;
+                writeToAll(socket.nickname + ' changed name to ' + name + '\n\r');
+                socket.nickname = name;
 
             } else {
                 // with no parameter, echo current name
-                i = findExistingName(socket);
-                if (i < 0) {
-                    socket.write('you have no name!\n\r');
-                } else {
-                    socket.write('your name is: ' + sockets[i].name + '\n\r');
-                }
+                socket.write('your name is: ' + socket.nickname + '\n\r');
             }
             return true;
         }
