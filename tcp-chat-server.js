@@ -37,7 +37,7 @@ var s = net.Server(function (socket) {
 
     function parseForCommands(msg) {
         // \help command to show help
-        if (/\\help/.test(msg)) {
+        if (/^\\help/.test(msg)) {
             socket.write(
                 '\\nick\t\tshows your nickname\n\r' +
                 '\\nick name\tchanges your nickname to name\n\r' +
@@ -48,12 +48,12 @@ var s = net.Server(function (socket) {
         }
 
         // \nick command to change nickname
-        if (/\\check/.test(msg)) {
+        if (/^\\check/.test(msg)) {
             return true;
         }
 
         // \nick command to change nickname
-        if (/\\nick/.test(msg)) {
+        if (/^\\nick/.test(msg)) {
             var i;
             if (/\\nick [a-zA-Z][a-zA-Z][a-zA-Z0-9]*/.test(msg)) {
                 var name = /[^ ]*$/.exec(msg);
@@ -71,7 +71,7 @@ var s = net.Server(function (socket) {
         }
 
         // \exit command to quit
-        if (/\\exit/.test(msg)) {
+        if (/^\\exit/.test(msg)) {
             socket.end('goodbye\n\r');
             return true;
         }
