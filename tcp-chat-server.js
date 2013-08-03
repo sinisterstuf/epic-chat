@@ -1,11 +1,9 @@
 //TODO: command array: make the commands parser go throw some kind of array of command-names with functions to call for each command
-//TODO: sockets|names array: having 2 arrays for sockets and names|sockets is redundant, simply make onConnect add the IP as a name to the sockets array and then that can be used the way names is used now
 //TODO: add command \whois which returns name <-> IP
 //TODO: add command \who to show who is in the chat
 var net = require('net');
 
 var sockets = [];
-// var names = [];
 
 var s = net.Server(function (socket) {
     sockets.push({socket:socket, name:socket.remoteAddress});
@@ -22,8 +20,9 @@ var s = net.Server(function (socket) {
         }
     }
 
-    // looks for an existing named socket in names[]
-    // returns the index in names[] or -1 if not found
+    // looks for an existing named socket in sockets[]
+    // returns the index in sockets[] or -1 if not found
+    // TODO: update this to return a name instead of an index (there are no possible cases when a name cannot be in the list)
     function findExistingName(socket) {
         for (var i = 0; i < sockets.length; i++) {
             if (sockets[i].socket == socket) {
@@ -43,14 +42,7 @@ var s = net.Server(function (socket) {
         // parse input for valid commands
         if (!parseForCommands(d)) {
             // if it wasn't a command then write it to everybody
-
-            i = findExistingName(socket);
-            var name;
-
-            // if socket has no name then use IP address
-            name = (i < 0) ? socket.remoteAddress : sockets[i].name;
-
-            writeToAll(name + ': ' + d);
+            writeToAll(sockets[findExistingName(socket)].name + ': ' + d);
         }
     });
 
@@ -79,17 +71,8 @@ var s = net.Server(function (socket) {
                 name = /^[a-zA-Z0-9]*/.exec(name);
                 console.log('setting \'' + name + '\' as name for ' + addr);
 
-                i = findExistingName(socket);
-                var changeText = ' changed name to ';
-
-                // add or update name
-                if (i < 0) {
-                    writeToAll(socket.remoteAddress + changeText + name + '\n\r');
-                    names.push({name:name, socket:socket});
-                } else {
-                    writeToAll(names[i].name + changeText + name + '\n\r');
-                    names[i].name = name;
-                }
+                writeToAll(sockets[findExistingName(socket)].name + ' changed name to ' + name + '\n\r');
+                sockets[findExistingName(socket)].name = name;
 
             } else {
                 // with no parameter, echo current name
@@ -97,7 +80,7 @@ var s = net.Server(function (socket) {
                 if (i < 0) {
                     socket.write('you have no name!\n\r');
                 } else {
-                    socket.write('your name is: ' + names[i].name + '\n\r');
+                    socket.write('your name is: ' + sockets[i].name + '\n\r');
                 }
             }
             return true;
