@@ -5,7 +5,7 @@ var net = require('net');
 
 var sockets = [];
 
-var s = net.Server(function (socket) {
+var server = net.Server(function (socket) {
     var addr = socket.remoteAddress;
     socket.nickname = addr;
     sockets.push(socket);
@@ -89,6 +89,6 @@ var s = net.Server(function (socket) {
 
 });
 
-s.listen(1337);
+server.listen(1337);
 
 console.log('Starting epic chat server on port 1337');
