@@ -1,6 +1,5 @@
 //TODO: command array: make the commands parser go throw some kind of array of command-names with functions to call for each command
 //TODO: add command \whois which returns name <-> IP
-//TODO: add command \who to show who is in the chat
 var net = require('net');
 
 var sockets = [];
@@ -75,6 +74,13 @@ var server = net.Server(function (socket) {
         if (/^\\exit/.test(msg)) {
             socket.end('goodbye\n\r');
             return true;
+        }
+
+        // \who command to list users
+        if (/^\\who/.test(msg)) {
+            for (var i = 0; i < sockets.length; i++) {
+                socket.write(sockets[i].nickname + '\n\r');
+            }
         }
 
         return false;
