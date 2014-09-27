@@ -9,7 +9,7 @@ var server = net.Server(function (socket) {
     socket.nickname = addr;
     sockets.push(socket);
 
-    socket.write('Epic Chat Server\n\rFor help type \\help\n\rJust type to chat!\n\r'); 
+    socket.write('Epic Chat Server\n\rFor help type \\help\n\rJust type to chat!\n\r');
     console.log('new connection from: ' + addr);
     writeToAll(addr + ' connected!\n\r');
 

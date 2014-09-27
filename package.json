@@ -1,0 +1,23 @@
+{
+  "name": "epic-chat",
+  "version": "1.0.0",
+  "description": "A fairly lame tcp chat server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sinisterstuf/epic-chat.git"
+  },
+  "keywords": [
+    "tcp",
+    "chat"
+  ],
+  "author": "Siôn le Roux <sinisterstuf@gmail.com> (http://sinisterstuf.org/)",
+  "license": "GPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/sinisterstuf/epic-chat/issues"
+  },
+  "homepage": "https://github.com/sinisterstuf/epic-chat"
+}
