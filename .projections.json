@@ -1,0 +1,13 @@
+{
+  "*": {
+    "start": "npm start"
+  },
+  "server.js": {
+    "alternate": "test.js",
+    "make": "npm"
+  },
+  "test.js": {
+    "alternate": "server.js",
+    "dispatch": "mocha"
+  }
+}
