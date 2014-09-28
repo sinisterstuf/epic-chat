@@ -4,7 +4,12 @@
   "description": "A fairly lame tcp chat server",
   "main": "server.js",
   "scripts": {
+    "test": "mocha",
     "start": "node server.js"
+  },
+  "devDependencies": {
+    "mocha": "^1.18.2",
+    "should": "^4.0.4"
   },
   "repository": {
     "type": "git",
