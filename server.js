@@ -25,8 +25,8 @@ var server = net.Server(function (socket) {
         //append newline if missing
         d = (/\n.?$/.test(d)) ? d : d + '\n';
         var consoleStr = d;
-        console.log('received message from ' + addr + ': '
-            + new String(d).replace(/\n$/, ''));
+        console.log('received message from ' + addr + ': ' +
+            String(d).replace(/\n$/, ''));
 
         // parse input for valid commands
         if (!parseForCommands(d)) {
@@ -54,7 +54,6 @@ var server = net.Server(function (socket) {
 
         // \nick command to change nickname
         if (/^\\nick/.test(msg)) {
-            var i;
             if (/\\nick [a-zA-Z][a-zA-Z][a-zA-Z0-9]*/.test(msg)) {
                 var name = /[^ ]*$/.exec(msg);
                 name = /^[a-zA-Z0-9]*/.exec(name);
