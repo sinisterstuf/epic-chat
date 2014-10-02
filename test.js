@@ -1,6 +1,6 @@
 var server = require('./server.js')
 var net = require('net')
-require('should');
+require('should')
 
 describe('server', function() {
   it('display welcome banner on join', function(done) {
