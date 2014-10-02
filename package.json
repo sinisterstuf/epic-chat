@@ -27,5 +27,20 @@
   "bugs": {
     "url": "https://github.com/sinisterstuf/epic-chat/issues"
   },
-  "homepage": "https://github.com/sinisterstuf/epic-chat"
+  "homepage": "https://github.com/sinisterstuf/epic-chat",
+  "jshintConfig": {
+    "camelcase": true,
+    "eqeqeq": true,
+    "freeze": true,
+    "indent": 2,
+    "newcap": true,
+    "quotmark": "single",
+    "maxdepth": 3,
+    "maxstatements": 15,
+    "maxlen": 80,
+    "eqnull": true,
+    "funcscope": true,
+    "node": true,
+    "asi": true
+  }
 }

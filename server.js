@@ -1,5 +1,8 @@
-//TODO: command array: make the commands parser go throw some kind of array of command-names with functions to call for each command
+//TODO: command array: make the commands parser go throw some kind of array of
+//command-names with functions to call for each command
+
 //TODO: add command \whois which returns name <-> IP
+
 var net = require('net');
 
 var sockets = [];
@@ -9,14 +12,18 @@ var server = net.Server(function (socket) {
     socket.nickname = addr;
     sockets.push(socket);
 
-    socket.write('Epic Chat Server\n\rFor help type \\help\n\rJust type to chat!\n\r');
+    socket.write(
+        'Epic Chat Server\n\r' +
+        'For help type \\help\n\r' +
+        'Just type to chat!\n\r'
+        );
     console.log('new connection from: ' + addr);
     writeToAll(addr + ' connected!\n\r');
 
     // sends a message to all sockets except the current socket
     function writeToAll(msg) {
         for (var i = 0; i < sockets.length; i++) {
-            if (sockets[i] == socket) continue; // skip myself
+            if (sockets[i] === socket) continue; // skip myself
             sockets[i].write(msg);
         }
     }
@@ -59,7 +66,9 @@ var server = net.Server(function (socket) {
                 name = /^[a-zA-Z0-9]*/.exec(name);
                 console.log('setting \'' + name + '\' as name for ' + addr);
 
-                writeToAll(socket.nickname + ' changed name to ' + name + '\n\r');
+                writeToAll(
+                    socket.nickname + ' changed name to ' + name + '\n\r'
+                    );
                 socket.nickname = name;
 
             } else {
