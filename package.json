@@ -7,6 +7,9 @@
     "test": "mocha",
     "start": "node server.js"
   },
+  "engines": {
+    "node": "^0.10.32"
+  },
   "devDependencies": {
     "mocha": "^1.18.2",
     "should": "^4.0.4"
