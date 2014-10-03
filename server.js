@@ -103,6 +103,17 @@ var server = net.Server(function (socket) {
 
 })
 
+process.on('SIGINT', function shutdown() {
+  console.log('\ngracefull shutting down')
+  server.close() // stops new connections
+  sockets.forEach(function(socket) {
+    console.log('kicking ' + socket.nickname)
+    socket.destroy()
+  })
+  console.log('exiting')
+  process.exit()
+})
+
 server.listen(1337)
 
 console.log('Starting epic chat server on port 1337')
