@@ -4,8 +4,8 @@
 //TODO: add command \whois which returns name <-> IP
 
 var net = require('net')
-
 var sockets = []
+var config = require('./config')
 
 var server = net.Server(function (socket) {
     var addr = socket.remoteAddress
@@ -114,6 +114,6 @@ process.on('SIGINT', function shutdown() {
   process.exit()
 })
 
-server.listen(1337)
+server.listen(config.port)
 
-console.log('Starting epic chat server on port 1337')
+console.log('Starting epic chat server on port', config.port)
