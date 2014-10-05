@@ -106,10 +106,13 @@ var server = net.Server(function (socket) {
 process.on('SIGINT', function shutdown() {
   console.log('\ngracefull shutting down')
   server.close() // stops new connections
+
   sockets.forEach(function(socket) {
     console.log('kicking ' + socket.nickname)
+    socket.write('server shutting down, closing connection\n')
     socket.destroy()
   })
+
   console.log('exiting')
   process.exit()
 })
