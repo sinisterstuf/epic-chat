@@ -1,4 +1,3 @@
-var server = require('./server')
 var config = require('./config')
 var net = require('net')
 require('should')
