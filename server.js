@@ -23,7 +23,7 @@ var server = net.Server(function (socket) {
     // sends a message to all sockets except the current socket
     function writeToAll(msg) {
         for (var i = 0; i < sockets.length; i++) {
-            if (sockets[i] === socket) continue; // skip myself
+            if (sockets[i] === socket) continue // skip myself
             sockets[i].write(msg)
         }
     }
