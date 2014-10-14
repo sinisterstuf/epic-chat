@@ -117,6 +117,11 @@ process.on('SIGINT', function shutdown() {
   process.exit()
 })
 
+server.on('error', function(error) {
+  if (error.code === 'EADDRINUSE') {
+    console.error('Epic Chat is already running on port ' + config.port)
+  }
+})
 server.listen(config.port)
 
 console.log('Starting epic chat server on port', config.port)
