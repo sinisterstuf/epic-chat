@@ -28,18 +28,20 @@ var server = net.Server(function (socket) {
         }
     }
 
-    socket.on('data', function(d) {
+    socket.on('data', function(consoleStr) {
         //append newline if missing
-        d = (/\n.?$/.test(d)) ? d : d + '\n'
-        var consoleStr = d
-        console.log('received message from ' + addr + ': ' +
-            String(d).replace(/\n$/, ''))
+        var consoleStr = String(consoleStr).split('\n').filter(
+            function(n) { return n != "" })
 
-        // parse input for valid commands
-        if (!parseForCommands(d)) {
-            // if it wasn't a command then write it to everybody
-            writeToAll(socket.nickname + ': ' + d)
-        }
+        consoleStr.forEach(function(d) {
+          console.log('received message from ' + addr + ': ' + d)
+
+          // parse input for valid commands
+          if (!parseForCommands(d)) {
+              // if it wasn't a command then write it to everybody
+              writeToAll(socket.nickname + ': ' + d + '\n\r')
+          }
+        })
     })
 
     function parseForCommands(msg) {
