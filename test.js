@@ -3,11 +3,18 @@ var net = require('net')
 require('should')
 
 describe('server', function() {
+  var alice
+
+  beforeEach(function() {
+    require('./server')
+    alice = net.connect({ port: config.port })
+  })
+
+  afterEach(function() {
+    alice.end()
+  })
 
   it('displays welcome banner on join', function(done) {
-    require('./server')
-    var alice = net.connect({ port: config.port })
-
     alice.on('data', function(data) {
       data.toString().should.containEql('Epic Chat Server')
       alice.end()
@@ -16,9 +23,6 @@ describe('server', function() {
   })
 
   it('shows 127.0.0.1 as default nick', function(done) {
-    require('./server')
-    var alice = net.connect({ port: config.port })
-
     alice.on('data', function(data) {
       if (data.toString().indexOf('your name is: 127.0.0.1') > -1) {
         done()
@@ -28,18 +32,7 @@ describe('server', function() {
     alice.write('\\nick\n')
   })
 
-  describe('commands', function() {
-    var alice
-
-    beforeEach(function() {
-      require('./server')
-      alice = net.connect({ port: config.port })
-    })
-
-    afterEach(function() {
-      alice.end()
-    })
-
+  describe('command', function() {
     it('shows 127.0.0.1 as default nick', function(done) {
       alice.once('data', function(data) {
         data.toString().should.containEql('Epic Chat Server')
@@ -68,15 +61,10 @@ describe('server', function() {
 
       })
     })
-
-
   })
 
-
   it('prints messages to all but the sender', function(done) {
-    require('./server')
     var bob = net.connect({ port: config.port })
-    var alice = net.connect({ port: config.port })
 
     alice.once('data', function(data) {
       data.toString().should.containEql('Epic Chat Server')
