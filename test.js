@@ -33,6 +33,22 @@ describe('server', function() {
   })
 
   describe('command', function() {
+    it('shows help', function() {
+      alice.once('data', function(data) {
+        data.toString().should.containEql('Epic Chat Server')
+
+        alice.once('data', function(data) {
+          data.toString().should.containEql(
+            '\\nick\t\tshows your nickname\n\r' +
+            '\\nick name\tchanges your nickname to name\n\r' +
+            '\\help\t\tshows this message\n\r' +
+            '\\exit\t\tquits the chat\n\r'
+          )
+          done()
+        })
+      })
+    })
+
     it('shows 127.0.0.1 as default nick', function(done) {
       alice.once('data', function(data) {
         data.toString().should.containEql('Epic Chat Server')
