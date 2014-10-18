@@ -57,11 +57,6 @@ var server = net.Server(function (socket) {
         }
 
         // \nick command to change nickname
-        if (/^\\check/.test(msg)) {
-            return true
-        }
-
-        // \nick command to change nickname
         if (/^\\nick/.test(msg)) {
             if (/\\nick [a-zA-Z][a-zA-Z][a-zA-Z0-9]*/.test(msg)) {
                 var name = /[^ ]*$/.exec(msg)
