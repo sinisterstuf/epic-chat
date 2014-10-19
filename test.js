@@ -22,16 +22,6 @@ describe('server', function() {
     })
   })
 
-  it('shows 127.0.0.1 as default nick', function(done) {
-    alice.on('data', function(data) {
-      if (data.toString().indexOf('your name is: 127.0.0.1') > -1) {
-        done()
-      }
-    })
-
-    alice.write('\\nick\n')
-  })
-
   describe('command', function() {
     it('shows help', function() {
       alice.once('data', function(data) {
