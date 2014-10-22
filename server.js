@@ -30,8 +30,8 @@ var server = net.Server(function (socket) {
 
     socket.on('data', function(consoleStr) {
         //append newline if missing
-        var consoleStr = String(consoleStr).split('\n').filter(
-            function(n) { return n != "" })
+        consoleStr = String(consoleStr).split('\n').filter(
+            function(n) { return n !== '' })
 
         consoleStr.forEach(function(d) {
           console.log('received message from ' + addr + ': ' + d)
