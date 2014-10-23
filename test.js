@@ -67,6 +67,20 @@ describe('server', function() {
 
       })
     })
+
+    it('lists myself with \\who', function(done) {
+      alice.once('data', function(data) {
+        data.toString().should.containEql('Epic Chat Server')
+
+        alice.write('\\who\n')
+
+        alice.once('data', function(data) {
+          data.toString().should.containEql('127.0.0.1')
+          done()
+        })
+
+      })
+    })
   })
 
   it('prints messages to all but the sender', function(done) {
