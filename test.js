@@ -81,6 +81,21 @@ describe('server', function() {
 
       })
     })
+
+    it('displays exit message with \\exit', function(done) {
+      alice.once('data', function(data) {
+        data.toString().should.containEql('Epic Chat Server')
+
+        alice.write('\\exit\n')
+
+        alice.once('data', function(data) {
+          data.toString().should.containEql('goodbye')
+          done()
+        })
+
+      })
+    })
+
   })
 
   it('prints messages to all but the sender', function(done) {
