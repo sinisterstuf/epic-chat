@@ -1,10 +1,10 @@
 {
   "*": {
-    "start": "npm start"
+    "start": "npm start",
+    "make": "npm"
   },
   "server.js": {
-    "alternate": "test.js",
-    "make": "npm"
+    "alternate": "test.js"
   },
   "test.js": {
     "alternate": "server.js",
