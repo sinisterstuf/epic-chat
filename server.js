@@ -14,7 +14,7 @@ var commands = [
   [/^\\who/, who]
 ]
 
-var server = net.Server(function (socket) {
+var server = net.Server(function main(socket) {
     var addr = socket.remoteAddress
     socket.nickname = addr
     sockets.push(socket)
@@ -27,12 +27,12 @@ var server = net.Server(function (socket) {
     console.log('new connection from: ' + addr)
     writeToAll(addr + ' connected!\n\r')
 
-    socket.on('data', function(consoleStr) {
+    socket.on('data', function parseMessage(consoleStr) {
         //append newline if missing
         consoleStr = String(consoleStr).split('\n').filter(
             function(n) { return n !== '' })
 
-        consoleStr.forEach(function(d) {
+        consoleStr.forEach(function parseLine(d) {
           console.log('received message from ' + addr + ': ' + d)
 
           // parse input for valid commands
@@ -43,7 +43,7 @@ var server = net.Server(function (socket) {
         })
     })
 
-    socket.on('end', function() {
+    socket.on('end', function ending() {
         var i = sockets.indexOf(socket)
         sockets.splice(i, 1)
         writeToAll(addr + ' disconnected!\n\r')
