@@ -98,17 +98,25 @@ describe('server', function() {
 
   })
 
-  it('prints messages to all but the sender', function(done) {
-    var bob = net.connect({ port: config.port })
-
+  it('prints messages to all', function(done) {
     alice.once('data', function(data) {
       data.toString().should.containEql('Epic Chat Server')
+      var bob = net.connect({ port: config.port })
 
-      alice.once('data', function(data) {
-        data.toString().should.containEql('hi')
-        alice.end()
-        bob.end()
-        done()
+      bob.once('data', function(data) {
+        data.toString().should.containEql('Epic Chat Server')
+
+        bob.once('data', function(data) {
+          data.toString().should.containEql('hi')
+
+          alice.once('data', function(data) {
+            data.toString().should.containEql('hi')
+            alice.end()
+            bob.end()
+            done()
+          })
+
+        })
       })
 
       bob.write('hi')
