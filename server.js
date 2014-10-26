@@ -7,6 +7,13 @@ var net = require('net')
 var sockets = []
 var config = require('./config')
 
+var commands = [
+  [/^\\help/, help],
+  [/^\\nick/, nick],
+  [/^\\exit/, exit],
+  [/^\\who/, who]
+]
+
 var server = net.Server(function (socket) {
     var addr = socket.remoteAddress
     socket.nickname = addr
@@ -20,10 +27,6 @@ var server = net.Server(function (socket) {
     console.log('new connection from: ' + addr)
     writeToAll(addr + ' connected!\n\r')
 
-    function writeToAll(msg) {
-      for (var i = 0; i < sockets.length; i++) sockets[i].write(msg)
-    }
-
     socket.on('data', function(consoleStr) {
         //append newline if missing
         consoleStr = String(consoleStr).split('\n').filter(
@@ -33,59 +36,12 @@ var server = net.Server(function (socket) {
           console.log('received message from ' + addr + ': ' + d)
 
           // parse input for valid commands
-          if (!parseForCommands(d)) {
+          if (!parseForCommands(socket, d)) {
               // if it wasn't a command then write it to everybody
               writeToAll(socket.nickname + ': ' + d + '\n\r')
           }
         })
     })
-
-    function parseForCommands(msg) {
-        // \help command to show help
-        if (/^\\help/.test(msg)) {
-            socket.write(
-                '\\nick\t\tshows your nickname\n\r' +
-                '\\nick name\tchanges your nickname to name\n\r' +
-                '\\help\t\tshows this message\n\r' +
-                '\\exit\t\tquits the chat\n\r'
-            )
-            return true
-        }
-
-        // \nick command to change nickname
-        if (/^\\nick/.test(msg)) {
-            if (/\\nick [a-zA-Z][a-zA-Z][a-zA-Z0-9]*/.test(msg)) {
-                var name = /[^ ]*$/.exec(msg)
-                name = /^[a-zA-Z0-9]*/.exec(name)
-                console.log('setting \'' + name + '\' as name for ' + addr)
-
-                writeToAll(
-                    socket.nickname + ' changed name to ' + name + '\n\r'
-                    )
-                socket.nickname = name
-
-            } else {
-                // with no parameter, echo current name
-                socket.write('your name is: ' + socket.nickname + '\n\r')
-            }
-            return true
-        }
-
-        // \exit command to quit
-        if (/^\\exit/.test(msg)) {
-            socket.end('goodbye\n\r')
-            return true
-        }
-
-        // \who command to list users
-        if (/^\\who/.test(msg)) {
-            for (var i = 0; i < sockets.length; i++) {
-                socket.write(sockets[i].nickname + '\n\r')
-            }
-        }
-
-        return false
-    }
 
     socket.on('end', function() {
         var i = sockets.indexOf(socket)
@@ -95,6 +51,62 @@ var server = net.Server(function (socket) {
     })
 
 })
+
+function parseForCommands(socket, msg) {
+  for (var i = 0; i < commands.length; i++) {
+    if (commands[i][0].test(msg)) {
+      commands[i][1](socket, msg)
+      return true
+    }
+  }
+  return false
+}
+
+function writeToAll(msg) {
+  for (var i = 0; i < sockets.length; i++) sockets[i].write(msg)
+}
+
+// \help command to show help
+function help(socket) {
+  socket.write(
+    '\\nick\t\tshows your nickname\n\r' +
+    '\\nick name\tchanges your nickname to name\n\r' +
+    '\\help\t\tshows this message\n\r' +
+    '\\exit\t\tquits the chat\n\r'
+    )
+  return true
+}
+
+// \nick command to change nickname
+function nick(socket, msg) {
+  if (/\\nick [a-zA-Z][a-zA-Z][a-zA-Z0-9]*/.test(msg)) {
+    var addr = socket.remoteAddress
+    var name = /[^ ]*$/.exec(msg)
+    name = /^[a-zA-Z0-9]*/.exec(name)
+    console.log('setting \'' + name + '\' as name for ' + addr)
+
+    writeToAll(socket.nickname + ' changed name to ' + name + '\n\r')
+    socket.nickname = name
+
+  } else {
+    // with no parameter, echo current name
+    socket.write('your name is: ' + socket.nickname + '\n\r')
+  }
+  return true
+}
+
+// \exit command to close connection
+function exit(socket) {
+  socket.end('goodbye\n\r')
+  return true
+}
+
+// \who command to list users
+function who(socket) {
+  for (var i = 0; i < sockets.length; i++) {
+    socket.write(sockets[i].nickname + '\n\r')
+  }
+}
 
 process.on('SIGINT', function shutdown() {
   console.log('\ngracefully shutting down')
