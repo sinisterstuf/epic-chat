@@ -90,7 +90,9 @@ describe('server', function() {
 
         alice.once('data', function(data) {
           data.toString().should.containEql('goodbye')
-          done()
+          alice.on('end', function() {
+            done()
+          })
         })
 
       })
