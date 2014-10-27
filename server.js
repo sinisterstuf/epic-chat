@@ -1,8 +1,3 @@
-//TODO: command array: make the commands parser go throw some kind of array of
-//command-names with functions to call for each command
-
-//TODO: add command \whois which returns name <-> IP
-
 var net = require('net')
 var sockets = []
 var config = require('./config')
