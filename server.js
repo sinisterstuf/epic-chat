@@ -10,40 +10,40 @@ var commands = [
 ]
 
 var server = net.Server(function main(socket) {
-    var addr = socket.remoteAddress
-    socket.nickname = addr
-    sockets.push(socket)
+  var addr = socket.remoteAddress
+  socket.nickname = addr
+  sockets.push(socket)
 
-    socket.write(
-        'Epic Chat Server\n\r' +
-        'For help type \\help\n\r' +
-        'Just type to chat!\n\r'
-        )
-    console.log('new connection from: ' + addr)
-    writeToAll(addr + ' connected!\n\r')
+  socket.write(
+    'Epic Chat Server\n\r' +
+    'For help type \\help\n\r' +
+    'Just type to chat!\n\r'
+    )
+  console.log('new connection from: ' + addr)
+  writeToAll(addr + ' connected!\n\r')
 
-    socket.on('data', function parseMessage(consoleStr) {
-        //append newline if missing
-        consoleStr = String(consoleStr).split('\n').filter(
-            function(n) { return n !== '' })
+  socket.on('data', function parseMessage(consoleStr) {
+    //append newline if missing
+    consoleStr = String(consoleStr).split('\n').filter(
+      function(n) { return n !== '' })
 
-        consoleStr.forEach(function parseLine(d) {
-          console.log('received message from ' + addr + ': ' + d)
+    consoleStr.forEach(function parseLine(d) {
+      console.log('received message from ' + addr + ': ' + d)
 
-          // parse input for valid commands
-          if (!parseForCommands(socket, d)) {
-              // if it wasn't a command then write it to everybody
-              writeToAll(socket.nickname + ': ' + d + '\n\r')
-          }
-        })
+      // parse input for valid commands
+      if (!parseForCommands(socket, d)) {
+        // if it wasn't a command then write it to everybody
+        writeToAll(socket.nickname + ': ' + d + '\n\r')
+      }
     })
+  })
 
-    socket.on('end', function ending() {
-        var i = sockets.indexOf(socket)
-        sockets.splice(i, 1)
-        writeToAll(addr + ' disconnected!\n\r')
-        console.log('client disconnected')
-    })
+  socket.on('end', function ending() {
+    var i = sockets.indexOf(socket)
+    sockets.splice(i, 1)
+    writeToAll(addr + ' disconnected!\n\r')
+    console.log('client disconnected')
+  })
 
 })
 
