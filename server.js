@@ -50,8 +50,7 @@ var server = net.Server(function main(socket) {
 function parseForCommands(socket, msg) {
   for (var i = 0; i < commands.length; i++) {
     if (commands[i][0].test(msg)) {
-      commands[i][1](socket, msg)
-      return true
+      return commands[i][1](socket, msg)
     }
   }
   return false
@@ -101,6 +100,7 @@ function who(socket) {
   for (var i = 0; i < sockets.length; i++) {
     socket.write(sockets[i].nickname + '\n\r')
   }
+  return true
 }
 
 process.on('SIGINT', function shutdown() {
