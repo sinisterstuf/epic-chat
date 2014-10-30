@@ -61,8 +61,12 @@ describe('server', function() {
         })
 
         alice.once('data', function(data) {
-          data.toString().should.containEql('alice')
-          done()
+          var testStr = '127.0.0.1 changed name to alice'
+          data.toString().should.containEql(testStr)
+          alice.once('data', function(data) {
+            data.toString().should.eql('your name is: alice\n\r')
+            done()
+          })
         })
 
       })
