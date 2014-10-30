@@ -66,6 +66,7 @@ function help(socket) {
     '\\nick\t\tshows your nickname\n\r' +
     '\\nick name\tchanges your nickname to name\n\r' +
     '\\help\t\tshows this message\n\r' +
+    '\\who\t\tlists users in chat\n\r' +
     '\\exit\t\tquits the chat\n\r'
     )
   return true
