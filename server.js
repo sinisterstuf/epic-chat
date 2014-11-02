@@ -6,6 +6,7 @@ var commands = [
   [/^\\help/, help],
   [/^\\nick/, nick],
   [/^\\exit/, exit],
+  [/^\\whois/, whois],
   [/^\\who/, who]
 ]
 
@@ -67,6 +68,7 @@ function help(socket) {
     '\\nick name\tchanges your nickname to name\n\r' +
     '\\help\t\tshows this message\n\r' +
     '\\who\t\tlists users in chat\n\r' +
+    '\\whois nick\tshows the nick with IP address\n\r' +
     '\\exit\t\tquits the chat\n\r'
     )
   return true
@@ -101,6 +103,21 @@ function who(socket) {
   for (var i = 0; i < sockets.length; i++) {
     socket.write(sockets[i].nickname + '\n\r')
   }
+  return true
+}
+
+// \whois command to show someone's IP
+function whois(socket, msg) {
+  for (var i = 0; i < sockets.length; i++) {
+    var re = new RegExp(sockets[i].nickname)
+    if (re.test(msg)) {
+      socket.write(
+          sockets[i].nickname + ': ' +
+          sockets[i].remoteAddress + '\n\r'
+          )
+    }
+  }
+
   return true
 }
 

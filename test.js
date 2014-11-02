@@ -86,6 +86,42 @@ describe('server', function() {
       })
     })
 
+    it('shows my IP with \\whois', function(done) {
+      alice.once('data', function(data) {
+        data.toString().should.containEql('Epic Chat Server')
+
+        alice.write('\\whois 127.0.0.1\n')
+
+        alice.once('data', function(data) {
+          data.toString().should.eql('127.0.0.1: 127.0.0.1\n\r')
+          done()
+        })
+
+      })
+    })
+
+    it('shows my name and IP with \\whois', function(done) {
+      alice.once('data', function(data) {
+        data.toString().should.containEql('Epic Chat Server')
+
+        alice.write('\\nick alice\n', 'utf8', function nickcall() {
+
+        alice.once('data', function(data) {
+            var testStr = '127.0.0.1 changed name to alice\n\r'
+            data.toString().should.eql(testStr)
+
+            alice.write('\\whois alice\n')
+
+            alice.once('data', function(data) {
+              data.toString().should.eql('alice: 127.0.0.1\n\r')
+              done()
+            })
+          })
+        })
+
+      })
+    })
+
     it('displays exit message with \\exit', function(done) {
       alice.once('data', function(data) {
         data.toString().should.containEql('Epic Chat Server')
